@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wealthy Fax International</title>
+<style>
+/* --- VARIABLES --- */
+:root {
+  --bg-dark: #0b1020;
+  --bg-light: #f5f7ff;
+  --card-dark: rgba(255, 255, 255, 0.08);
+  --card-light: #ffffff;
+  --text-dark: #e6e8ff;
+  --text-light: #0b1020;
+  --accent: #5b7bff;
+  --accent2: #ff4d6d;
+  --accent3: #00e0ff;
+  --success: #00ffcc;
+  --warning: #ffa502;
+}
+
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+  font-family: "Segoe UI", Tahoma, sans-serif; 
+}
+
+body {
+  background: linear-gradient(135deg, #0b1020, #1a0f3f, #001f3f);
+  color: var(--text-dark);
+  transition: background 0.4s, color 0.4s;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body.light {
+  background: linear-gradient(135deg, #f5f7ff, #dbe5ff, #e7f7ff);
+  color: var(--text-light);
+}
+
+.app { 
+  display: flex; 
+  min-height: 100vh; 
+}
+
+@keyframes slideIn { from { transform: translateX(-50px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes pop { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.toast {
+  background: var(--card-dark);
+  backdrop-filter: blur(15px);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border-left: 5px solid var(--accent);
+  font-weight: 600;
+  animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  display: flex;
+  align-items: center;
+  min-width: 250px;
+}
+
+body.light .toast {
+  background: white;
+  color: var(--text-light);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.toast.error { border-left-color: var(--accent2); }
+.toast.success { border-left-color: var(--success); }
+.toast.warning { border-left-color: var(--warning); }
+.toast.hide { animation: slideOutRight 0.4s ease forwards; }
+
+@keyframes slideOutRight { from { transform: translateX(0); opacity: 1; } to { transform: translateX(120%); opacity: 0; } }
+
+.sidebar {
+  width: 260px;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(15px);
+  padding: 25px;
+  border-right: 1px solid rgba(255, 255, 255, 0.05);
+  animation: slideIn 0.8s ease;
+}
+
+body.light .sidebar { background: rgba(255, 255, 255, 0.55); }
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 40px;
+  background: linear-gradient(135deg, var(--accent), var(--accent3), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.nav a {
+  display: block;
+  padding: 14px 18px;
+  border-radius: 16px;
+  text-decoration: none;
+  color: inherit;
+  margin-bottom: 12px;
+  transition: all 0.3s;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+body.light .nav a { border: 1px solid rgba(0, 0, 0, 0.08); }
+.nav a:hover { transform: translateX(8px); background: rgba(255, 255, 255, 0.1); }
+.nav a.active { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; box-shadow: 0 10px 20px rgba(91, 123, 255, 0.3); }
+
+.main { flex: 1; padding: 40px; animation: fadeIn 1s ease; }
+
+.card {
+  background: var(--card-dark);
+  padding: 25px;
+  border-radius: 24px;
+  margin-bottom: 25px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+body.light .card { background: var(--card-light); box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12); }
+
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; }
+.big { font-size: 26px; font-weight: 800; color: var(--accent3); }
+
+.graph-area {
+  height: 250px;
+  background: linear-gradient(135deg, rgba(91, 123, 255, 0.1), rgba(0, 224, 255, 0.1));
+  border-radius: 20px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: bold;
+}
+
+.withdraw-modern { display: flex; flex-direction: column; gap: 15px; }
+.withdraw-modern .row { display: flex; gap: 15px; }
+.withdraw-modern .row input { flex: 1; }
+
+.withdraw-bar-container { height: 10px; background: rgba(255, 255, 255, 0.05); border-radius: 10px; overflow: hidden; margin-top: 10px; }
+#withdrawBar { display: block; width: 0%; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); transition: width 0.8s ease; }
+
+.deposit-float {
+  position: fixed; bottom: 40px; right: 40px; padding: 18px 28px; border-radius: 50px;
+  font-weight: 800; background: linear-gradient(135deg, #00ffcc, #5b7bff);
+  color: #0b1020; cursor: pointer; box-shadow: 0 15px 40px rgba(0, 255, 204, 0.3);
+  animation: bounce 2s infinite; z-index: 999;
+}
+
+.whatsapp {
+  position: fixed; bottom: 40px; left: 30px; padding: 15px 22px; border-radius: 50px;
+  background: linear-gradient(135deg, #25d366, #128c7e); color: white; font-weight: 700;
+  box-shadow: 0 15px 35px rgba(37, 211, 102, 0.3); 
+  display: none; 
+  align-items: center; gap: 12px;
+  z-index: 999; text-decoration: none;
+}
+.whatsapp img { width: 24px; height: 24px; filter: brightness(0) invert(1); }
+.whatsapp span { font-size: 14px; }
+
+.auth-card {
+  width: 100%; max-width: 420px; margin: 100px auto; background: var(--card-dark);
+  padding: 40px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5); 
+}
+
+body.light .auth-card { background: var(--card-light); }
+
+input {
+  width: 100%; padding: 15px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05); color: white; margin-bottom: 15px; outline: none;
+}
+
+body.light input { background: rgba(0, 0, 0, 0.06); color: #0b1020; border: 1px solid rgba(0, 0, 0, 0.1); }
+
+.btn {
+  width: 100%; padding: 16px; border: none; border-radius: 15px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: white; cursor: pointer; font-weight: 700; transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn:disabled { background: #444; opacity: 0.6; cursor: not-allowed; transform: none !important; box-shadow: none !important; }
+.btn:hover:not(:disabled) { transform: translateY(-4px); box-shadow: 0 12px 25px rgba(91, 123, 255, 0.4); }
+
+.btn-secondary {
+  background: linear-gradient(135deg, #ff9f43, #ff6b35);
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #00ffcc, #00b894);
+  color: #0b1020;
+}
+
+.modal {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.8);
+  display: flex; align-items: center; justify-content: center; z-index: 1000;
+}
+
+.modal-content {
+  width: 90%; max-width: 400px; background: var(--bg-dark); border-radius: 20px;
+  padding: 30px; text-align: center;
+}
+
+body.light .modal-content { background: white; }
+
+.package-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.package-card.featured {
+  border: 2px solid var(--accent);
+  box-shadow: 0 15px 35px rgba(91, 123, 255, 0.3);
+}
+
+.package-badge {
+  position: absolute;
+  top: 15px;
+  right: -30px;
+  background: var(--accent2);
+  color: white;
+  padding: 5px 40px;
+  font-size: 12px;
+  font-weight: bold;
+  transform: rotate(45deg);
+}
+
+.package-features {
+  list-style: none;
+  margin: 20px 0;
+  text-align: left;
+}
+
+.package-features li {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+body.light .package-features li {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.package-features li:before {
+  content: "✓";
+  color: var(--success);
+  font-weight: bold;
+}
+
+.locked-feature {
+  opacity: 0.5;
+}
+
+.locked-feature:before {
+  content: "🔒";
+  color: var(--accent2);
+}
+
+/* Payment Modal Styles */
+.payment-details {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  margin: 20px 0;
+  text-align: left;
+}
+
+body.light .payment-details {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.light .payment-row {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.payment-row:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.payment-row.total {
+  font-weight: bold;
+  font-size: 18px;
+  color: var(--accent3);
+}
+
+.payment-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+  padding: 15px;
+  border-radius: 12px;
+  background: rgba(0, 255, 204, 0.1);
+  border: 1px solid var(--success);
+}
+
+.payment-status.pending {
+  background: rgba(255, 165, 2, 0.1);
+  border-color: var(--warning);
+  animation: pulse 2s infinite;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--warning);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.spinner.sm {
+  width: 16px;
+  height: 16px;
+  border-width: 2px;
+  border-color: rgba(255,255,255,0.75);
+  border-top-color: transparent;
+}
+
+.btn-loader {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.btn-text-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.mpesa-logo {
+  width: 60px;
+  height: 60px;
+  background: #00a650;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  font-weight: bold;
+  color: white;
+  font-size: 12px;
+}
+
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.menu-toggle {
+  display: none;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255,255,255,0.05);
+  color: inherit;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+body.light .menu-toggle {
+  border-color: rgba(0,0,0,0.12);
+  background: rgba(0,0,0,0.04);
+}
+
+.page-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-bottom: 4px;
+}
+
+.page-title {
+  font-size: clamp(24px, 3vw, 34px);
+  font-weight: 800;
+}
+
+.page-subtitle {
+  opacity: 0.8;
+  max-width: 700px;
+  line-height: 1.6;
+}
+
+.status-pills {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+body.light .pill {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.08);
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.stat-card {
+  min-height: 148px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.stat-card h3 {
+  font-size: 15px;
+  opacity: 0.86;
+}
+
+.stat-card .big {
+  font-size: clamp(22px, 2.4vw, 30px);
+  line-height: 1.15;
+  word-break: break-word;
+}
+
+.stat-card .mini-note {
+  margin-top: 10px;
+  opacity: 0.82;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 18px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.data-table th,
+.data-table td {
+  text-align: left;
+  padding: 14px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+body.light .data-table th,
+body.light .data-table td {
+  border-bottom-color: rgba(0,0,0,0.08);
+}
+
+.data-table th {
+  opacity: 0.75;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.amount-positive { color: var(--success); font-weight: 700; }
+.amount-negative { color: #ff8a8a; font-weight: 700; }
+.amount-neutral { color: var(--accent3); font-weight: 700; }
+
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.status-chip.success { background: rgba(0,255,204,0.12); color: var(--success); }
+.status-chip.pending { background: rgba(255,165,2,0.12); color: var(--warning); }
+.status-chip.failed { background: rgba(255,77,109,0.12); color: var(--accent2); }
+
+.muted {
+  opacity: 0.76;
+  line-height: 1.6;
+}
+
+.inline-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.inline-actions .btn {
+  width: auto;
+  min-width: 170px;
+}
+
+.reset-panel {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+body.light .reset-panel {
+  border-top-color: rgba(0,0,0,0.08);
+}
+
+.auth-hint {
+  text-align: center;
+  margin-top: 18px;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.link-button {
+  color: var(--accent3);
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.support-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.support-card {
+  padding: 22px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+body.light .support-card {
+  background: rgba(0,0,0,0.04);
+  border-color: rgba(0,0,0,0.08);
+}
+
+.support-card h4 { margin-bottom: 10px; }
+.support-card a { color: inherit; text-decoration: none; }
+
+.transaction-empty {
+  padding: 24px;
+  border-radius: 20px;
+  border: 1px dashed rgba(255,255,255,0.12);
+  text-align: center;
+  opacity: 0.85;
+}
+
+body.light .transaction-empty {
+  border-color: rgba(0,0,0,0.12);
+}
+
+.footer-note {
+  text-align: center;
+  opacity: 0.7;
+  font-size: 13px;
+  margin-top: 20px;
+}
+
+input::placeholder { color: rgba(255,255,255,0.62); }
+body.light input::placeholder { color: rgba(11,16,32,0.55); }
+
+@media(max-width: 1100px) {
+  .grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media(max-width: 900px) {
+  .menu-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .main { padding: 20px 16px 122px; }
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: min(82vw, 320px);
+    z-index: 1200;
+    transform: translateX(-105%);
+    transition: transform 0.3s ease;
+  }
+  body.sidebar-open .sidebar { transform: translateX(0); }
+  .app { display: block; }
+  .topbar { align-items: flex-start; }
+  .status-pills { width: 100%; }
+  .auth-card { margin: 28px auto; padding: 26px 18px; border-radius: 24px; }
+  .inline-actions .btn { width: 100%; }
+  .deposit-float {
+    right: 16px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 92px);
+    padding: 14px 18px;
+    border-radius: 18px;
+  }
+  .whatsapp {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 14px);
+    border-radius: 18px;
+    justify-content: center;
+    padding: 14px 18px;
+    min-height: 58px;
+  }
+  .modal-content { width: calc(100% - 20px); padding: 24px 18px; }
+
+  .grid { grid-template-columns: 1fr; }
+  .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .stat-card { min-height: 132px; padding: 18px 16px; }
+  .app { flex-direction: column; }
+  .sidebar { width: 100%; }
+  .withdraw-modern .row { flex-direction: column; }
+}
+
+@media(max-width: 640px) {
+  .grid { grid-template-columns: 1fr; }
+  .card { padding: 18px; border-radius: 20px; }
+  .payment-row { font-size: 14px; gap: 12px; }
+  .topbar-left { width: 100%; }
+  .status-pills { gap: 8px; }
+  .pill { width: 100%; }
+  .auth-card { padding: 24px 16px; }
+  .dashboard-grid { gap: 12px; }
+  .stat-card .big { font-size: 22px; }
+  .stat-card h3 { font-size: 14px; }
+  .whatsapp span { font-size: 13px; }
+}
+
+@media(max-width: 420px) {
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .main { padding-left: 12px; padding-right: 12px; }
+  .whatsapp {
+    left: 12px;
+    right: 12px;
+  }
+  .deposit-float {
+    right: 12px;
+    left: 12px;
+    text-align: center;
+  }
+}
+</style>
+</head>
+<body>
+
+<div id="toastContainer" class="toast-container"></div>
+
+<div id="authScreen" class="auth-card">
+    <div class="logo">Wealthy Fax</div>
+    
+    <div id="loginForm">
+        <h2 style="margin-bottom: 25px; text-align: center;">Login</h2>
+        <input id="loginUser" placeholder="Username">
+        <input id="loginPass" type="password" placeholder="Password" minlength="4" maxlength="4" inputmode="numeric">
+        <label style="display: flex; align-items: center; gap: 10px; margin: 10px 0 12px; font-size: 14px; cursor: pointer;">
+            <input type="checkbox" id="showLoginPassword" style="width: auto; margin: 0;" onchange="togglePasswordVisibility('loginPass', this.checked)"> Show password
+        </label>
+        <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; font-size: 14px; cursor: pointer;">
+            <input type="checkbox" id="rememberMe" style="width: auto; margin: 0;"> Remember me
+        </label>
+        <button class="btn" id="loginBtn" onclick="login()"><span class="btn-text-wrap">Login</span></button>
+        <p class="auth-hint"><span class="link-button" onclick="openResetPanel()">Forgot password? Reset it here</span></p>
+        <p style="margin-top: 20px; cursor: pointer; color: var(--accent3); text-align: center;" onclick="toggleAuth(false)">New user? <b>Register here</b></p>
+    </div>
+
+    <div id="registerForm" style="display: none;">
+        <h2 style="margin-bottom: 25px; text-align: center;">Register</h2>
+        <input id="regUser" placeholder="Username">
+        <input id="regPass" type="password" placeholder="Password" minlength="4" maxlength="4" inputmode="numeric">
+        <p class="muted" style="margin-top: 8px; margin-bottom: 4px; font-size: 13px;">Use exactly 4 characters.</p>
+        <input id="regReferral" placeholder="Referral code (optional)">
+        <button class="btn" id="registerBtn" onclick="register()"><span class="btn-text-wrap">Create Account</span></button>
+        <p style="margin-top: 20px; cursor: pointer; color: var(--accent3); text-align: center;" onclick="toggleAuth(true)">Already a member? <b>Login</b></p>
+    </div>
+
+    <div id="resetPanel" class="reset-panel" style="display: none;">
+        <h2 style="margin-bottom: 14px; text-align: center;">Forgot Password</h2>
+        <p class="muted" style="text-align: center; margin-bottom: 18px;">Reset your password right here from the login screen. For local testing, the reset code will appear below.</p>
+        <input id="resetUser" placeholder="Enter your username">
+        <div class="inline-actions" style="margin-bottom: 15px;">
+          <button class="btn" id="resetRequestBtn" onclick="requestPasswordReset()"><span class="btn-text-wrap">Get Reset Code</span></button>
+        </div>
+        <input id="resetCode" placeholder="Enter reset code">
+        <input id="newResetPassword" type="password" placeholder="Enter new password" minlength="4" maxlength="4" inputmode="numeric">
+        <p class="muted" style="margin-top: 8px; margin-bottom: 4px; font-size: 13px;">New password must be exactly 4 characters.</p>
+        <div class="inline-actions">
+          <button class="btn btn-success" id="resetSaveBtn" onclick="resetPassword()"><span class="btn-text-wrap">Save New Password</span></button>
+          <button class="btn" style="background: #444;" onclick="closeResetPanel()">Close</button>
+        </div>
+        <p id="resetDevCode" style="margin-top: 15px; text-align: center; color: var(--accent3); font-weight: 700;"></p>
+    </div>
+</div>
+
+<div class="app" id="app" style="display: none;">
+  <div class="sidebar">
+    <div class="logo">Wealthy Fax</div>
+    <div class="nav">
+      <a class="active" onclick="showPage('dashboard', this)">Dashboard</a>
+      <a onclick="showPage('views', this)">Views Portal</a>
+      <a onclick="showPage('withdraw', this)">Withdraw</a>
+      <a onclick="showPage('referral', this)">Referral</a>
+      <a onclick="showPage('transactions', this)">Transactions</a>
+      <a onclick="showPage('packages', this)">Packages</a>
+      <a onclick="showPage('support', this)">Support</a>
+      <a onclick="showPage('settings', this)">Settings</a>
+      <a onclick="showPage('about', this)">About Us</a>
+      <a style="margin-top: 20px; color: var(--accent2);" onclick="logout()">Logout</a>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+        <div>
+          <div class="page-eyebrow">Digital Service Platform</div>
+          <div class="page-title" id="pageTitle">Dashboard</div>
+          <div class="page-subtitle" id="pageSubtitle">Manage your wallet, service activity, referrals, support, and transaction records in one place.</div>
+        </div>
+      </div>
+      <div class="status-pills">
+        <div class="pill" id="userPill">User: -</div>
+        <div class="pill">WhatsApp Support: +254 753 747 263</div>
+      </div>
+    </div>
+    
+    <section class="page" id="dashboard">
+      <div class="grid dashboard-grid">
+        <div class="card stat-card">
+          <h3>Balance</h3>
+          <p class="big" id="balance">KES 0</p>
+        </div>
+        <div class="card stat-card">
+          <h3>Views</h3>
+          <p class="big" id="viewsCount">0</p>
+        </div>
+        <div class="card stat-card">
+          <h3>Package Status</h3>
+          <p class="big" id="pkg" style="font-size: 18px;">Not Active</p>
+          <p id="withdrawReadyText" class="mini-note">Withdrawal locked</p>
+        </div>
+        <div class="card stat-card">
+          <h3>Referrals</h3>
+          <p class="big" id="refCount">0 / 2</p>
+          <div style="height: 10px; background: rgba(255,255,255,0.12); border-radius: 999px; overflow: hidden; margin-top: 12px;">
+            <div id="refProgressBar" style="height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent3)); border-radius: 999px;"></div>
+          </div>
+          <p id="refStatusText" class="mini-note">Need 2 referrals to unlock withdrawals</p>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Earnings Graph</h3>
+        <div class="graph-area">LIVE DATA FEED</div>
+      </div>
+    </section>
+
+    <section class="page" id="views" style="display: none;">
+      <div class="card">
+        <h2>Submit Views</h2>
+        <p style="margin: 15px 0 10px; opacity: 0.8;">1 View = KES 50</p>
+        <p class="muted" style="margin-bottom: 16px;">Enter the number of views and upload a screenshot. The system checks the screenshot automatically and only credits your wallet when the screenshot matches the views number you entered.</p>
+        <input type="number" id="viewNumber" placeholder="Enter number of views">
+        <input type="file" id="viewScreenshot" accept="image/*" style="margin-top: 12px;">
+        <button class="btn" id="viewSubmitBtn" onclick="submitViews()">Verify & Submit</button>
+        <p id="viewProofStatus" class="mini-note" style="margin-top: 14px; text-align: center;">No screenshot submitted yet.</p>
+        <p id="cooldownTimer" style="margin-top: 12px; color: var(--accent2); font-weight: bold; text-align: center;"></p>
+      </div>
+    </section>
+
+    <section class="page" id="withdraw" style="display: none;">
+      <div class="card">
+        <h2>Withdraw Funds</h2>
+        <p style="margin-bottom: 12px; opacity: 0.8;">Minimum withdrawal: <b>KES 8000</b></p>
+        <p style="margin-bottom: 20px; opacity: 0.8;">Requirement: <b>Activation fee paid + at least 2 referrals</b></p>
+        
+        <div class="withdraw-modern">
+            <div class="row">
+              <input type="number" id="withdrawAmount" placeholder="Enter amount (KES)" min="8000">
+            </div>
+            <div class="row">
+              <input type="text" id="mpesaNumber" placeholder="Enter Mpesa number (e.g. 07XXXXXXXX)">
+            </div>
+            
+            <button class="btn" id="withdrawBtn" onclick="withdraw()">Request Withdrawal</button>
+            
+            <div class="withdraw-bar-container">
+              <span id="withdrawBar"></span>
+            </div>
+            <p id="withdrawStatus" style="text-align: center; font-weight: bold; margin-top: 10px;"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="referral" style="display: none;">
+      <div class="card">
+        <h2>Your Referral Link</h2>
+        <p style="margin-top: 10px; opacity: 0.8;">Share this link to earn referrals. You need at least 2 referrals before your first withdrawal.</p>
+        <p id="referralProgressText" style="margin-top: 10px; font-weight: bold; color: var(--accent3);">Referrals: 0 / 2</p>
+        <div style="display: flex; gap: 12px; margin-top: 15px;">
+          <input id="refLink" value="https://wealthyfax.com/?ref=YOURCODE" readonly>
+          <button class="btn" style="width: 100px;" onclick="copyReferral()">Copy</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="packages" style="display: none;">
+      <!-- Gold Package -->
+      <div class="card package-card featured">
+        <div class="package-badge">REQUIRED</div>
+        <h3>Gold Package</h3>
+        <p class="big">KES 299</p>
+        <p style="opacity: 0.8; margin-bottom: 10px;">Pay this FIRST to start earning</p>
+        <ul class="package-features">
+          <li>Access to Views Portal</li>
+          <li>Earn KES 50 per view</li>
+          <li>24-hour submission cooldown</li>
+          <li>Priority WhatsApp support</li>
+        </ul>
+
+        <!-- Payment Instructions -->
+        <div id="goldPaymentInfo" style="background: rgba(0, 224, 255, 0.1); border: 1px solid var(--accent3); border-radius: 12px; padding: 15px; margin: 15px 0;">
+          <h4 style="color: var(--accent3); margin-bottom: 10px;">📱 How to Pay via M-Pesa</h4>
+          <p style="font-size: 14px; line-height: 1.6; margin-bottom: 10px;">
+            <strong>Paybill Number:</strong> <span style="color: var(--accent3); font-size: 18px;">247247</span><br>
+            <strong>Account Number:</strong> <span style="color: var(--accent3); font-size: 18px;">0830185269135</span><br>
+            <strong>Amount:</strong> KES 299
+          </p>
+          <p style="font-size: 12px; opacity: 0.8;">After payment, click the button below to activate your account.</p>
+        </div>
+
+        <button class="btn" id="goldPayBtn" onclick="confirmManualPayment('gold')">✓ I Have Paid KES 299</button>
+        <p id="goldStatus" style="margin-top: 15px; color: var(--success); font-weight: bold; display: none;">✓ Gold Package Active</p>
+      </div>
+      
+      <!-- Activation Fee -->
+      <div class="card package-card">
+        <h3>Activation Fee</h3>
+        <p class="big">KES 999</p>
+        <p style="opacity: 0.8; margin-bottom: 10px;">Pay this when ready to withdraw</p>
+        <ul class="package-features">
+          <li class="locked-feature">Unlock Withdrawal Feature</li>
+          <li class="locked-feature">Instant M-Pesa withdrawals</li>
+          <li class="locked-feature">Minimum withdrawal: KES 8000</li>
+          <li class="locked-feature">Secure transactions</li>
+          <li class="locked-feature">At least 2 referrals required</li>
+        </ul>
+
+        <!-- Payment Instructions -->
+        <div id="activationPaymentInfo" style="background: rgba(255, 159, 67, 0.1); border: 1px solid var(--warning); border-radius: 12px; padding: 15px; margin: 15px 0;">
+          <h4 style="color: var(--warning); margin-bottom: 10px;">📱 How to Pay via M-Pesa</h4>
+          <p style="font-size: 14px; line-height: 1.6; margin-bottom: 10px;">
+            <strong>Paybill Number:</strong> <span style="color: var(--warning); font-size: 18px;">247247</span><br>
+            <strong>Account Number:</strong> <span style="color: var(--warning); font-size: 18px;">0830185269135</span><br>
+            <strong>Amount:</strong> KES 999
+          </p>
+          <p style="font-size: 12px; opacity: 0.8;">After payment, click the button below to activate withdrawals. You will still need 2 referrals before your first withdrawal.</p>
+        </div>
+
+        <button class="btn btn-secondary" id="activationPayBtn" onclick="confirmManualPayment('activation')">✓ I Have Paid KES 999</button>
+        <p id="activationStatus" style="margin-top: 15px; color: var(--success); font-weight: bold; display: none;">✓ Activation Fee Paid</p>
+      </div>
+    </section>
+
+        <section class="page" id="transactions" style="display: none;">
+      <div class="card">
+        <div style="display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 18px;">
+          <div>
+            <h2>Transaction History</h2>
+            <p class="muted">Only money-related wallet activity is shown here, like credits and withdrawal requests.</p>
+          </div>
+          <button class="btn" style="width: auto; min-width: 160px;" onclick="loadTransactions()">Refresh</button>
+        </div>
+        <div id="transactionHistory"></div>
+      </div>
+    </section>
+
+    <section class="page" id="support" style="display: none;">
+      <div class="card">
+        <h2>Support Center</h2>
+        <p class="muted" style="margin: 10px 0 22px;">Wealthy Fax support uses WhatsApp as the main help channel, while password reset stays available directly from login.</p>
+        <div class="support-grid">
+          <div class="support-card">
+            <h4>WhatsApp Support</h4>
+            <p class="muted">Fast help for new users, payment guidance, account questions, and getting started.</p>
+            <p style="margin-top: 12px; font-weight: 700;"><a href="https://wa.me/254753747263?text=Hello%20Wealthy%20Fax%20Support%2C%20I%20need%20help" target="_blank">Chat now on WhatsApp</a></p>
+          </div>
+          <div class="support-card">
+            <h4>Forgot Password</h4>
+            <p class="muted">Users can reset their password directly from the login form using the forgot password option.</p>
+            <p style="margin-top: 12px; font-weight: 700;">Self-service available</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<section class="page" id="settings" style="display: none;">
+      <div class="card">
+        <h3>Settings</h3>
+        <p style="margin: 10px 0 20px;">Toggle between Light and Dark themes.</p>
+        <button class="btn" onclick="toggleTheme()">Switch Theme Mode</button>
+      </div>
+    </section>
+  <section class="page" id="about" style="display: none;">
+      <div class="card">
+        <h2 style="margin-bottom: 20px; color: var(--accent3);">About Wealthy Fax International</h2>
+
+        <div style="line-height: 1.8; font-size: 15px;">
+          <p style="margin-bottom: 15px;">
+            <strong>Wealthy Fax International</strong> is a digital service platform focused on online engagement services, user rewards, WhatsApp-based support, and transparent wallet activity for customers across Kenya and beyond.
+          </p>
+
+          <p style="margin-bottom: 15px;">
+            Established in 2024, our platform has rapidly grown to become a trusted name in the digital economy space. We combine service access, user account management, transaction tracking, and direct WhatsApp support into one clear dashboard experience.
+          </p>
+
+          <p style="margin-bottom: 15px;">
+            Our mission is simple: <em>"Democratizing digital earnings for every Kenyan."</em> We believe that everyone deserves access to legitimate income opportunities, regardless of their background or education level.
+          </p>
+
+          <h3 style="margin: 25px 0 15px; color: var(--accent);">What We Offer</h3>
+          <ul style="margin-left: 20px; margin-bottom: 15px;">
+            <li style="margin-bottom: 8px;">✓ <strong>Service Access & Rewards</strong> – Track wallet credits, service activity, and referral progress through our verified portal</li>
+            <li style="margin-bottom: 8px;">✓ <strong>Instant M-Pesa Withdrawals</strong> – Access your earnings quickly and securely directly to your mobile money</li>
+            <li style="margin-bottom: 8px;">✓ <strong>Referral Commissions</strong> – Build passive income by inviting friends and family to join</li>
+            <li style="margin-bottom: 8px;">✓ <strong>WhatsApp Support</strong> – Reach our team quickly through WhatsApp for help</li>
+            <li style="margin-bottom: 8px;">✓ <strong>Transparent Operations</strong> – No hidden fees, clear pricing, and honest communication</li>
+          </ul>
+
+          <h3 style="margin: 25px 0 15px; color: var(--accent);">Our Values</h3>
+          <p style="margin-bottom: 15px;">
+            <strong>Integrity:</strong> We operate with complete transparency and honesty in all our dealings.<br>
+            <strong>Innovation:</strong> We continuously improve our platform to provide the best user experience.<br>
+            <strong>Inclusivity:</strong> We welcome everyone – from students to professionals, urban to rural residents.<br>
+            <strong>Reliability:</strong> When you earn with us, you can count on timely payments every time.
+          </p>
+
+          <p style="margin-bottom: 15px;">
+            Join thousands of Kenyans who are already transforming their financial lives with Wealthy Fax International. Whether you're looking for a side hustle or a primary income source, we're here to help you succeed in the digital economy.
+          </p>
+
+          <div style="background: linear-gradient(135deg, rgba(91, 123, 255, 0.1), rgba(0, 224, 255, 0.1)); padding: 20px; border-radius: 16px; margin-top: 25px; border-left: 4px solid var(--accent);">
+            <p style="font-style: italic; font-size: 16px;">
+              "At Wealthy Fax International, we don't just offer earning opportunities – we build pathways to financial freedom. Your success is our success."
+            </p>
+          </div>
+        </div>
+
+        <!-- Director Section -->
+        <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid rgba(255,255,255,0.1); text-align: center;">
+          <h3 style="margin-bottom: 20px; color: var(--accent2);">Leadership</h3>
+
+          <div style="display: inline-block; background: rgba(255,255,255,0.05); padding: 25px 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent), var(--accent3)); border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; center; justify-content: center; font-size: 32px; font-weight: bold; color: white;">
+              N
+            </div>
+            <h4 style="font-size: 20px; margin-bottom: 5px; color: var(--accent3);">Director Nyumu</h4>
+            <p style="opacity: 0.8; font-size: 14px;">Founder & Chief Executive Officer</p>
+            <p style="margin-top: 10px; font-size: 13px; opacity: 0.7; max-width: 300px;">
+              Visionary leader driving Wealthy Fax International's mission to empower thousands of Kenyans through digital earning opportunities.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer-note">Wealthy Fax International • Digital services, WhatsApp support, and transaction tracking.</p>
+    <!-- CLOSE MAIN DIV -->
+</div>
+
+<div id="depositBtn" class="deposit-float" onclick="goToDeposit()" style="display: none;">
+  Deposit
+</div>
+
+<a id="waSupport" href="https://wa.me/254753747263?text=Hello%20Wealthy%20Fax%20Support%2C%20I%20need%20help " target="_blank" class="whatsapp">
+  <img src="https://cdn-icons-png.flaticon.com/512/733/733585.png " alt="WhatsApp">
+  <span>Chat now with us to get started</span>
+</a>
+
+<!-- Gold Package Required Modal -->
+<div class="modal" id="goldModal" style="display: none;" onclick="closeModal(event, 'goldModal')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <h3>Gold Package Required</h3>
+    <p style="margin: 20px 0;">You must purchase the Gold Package (KES 299) to access the Views Portal and start earning.</p>
+
+    <div style="background: rgba(0, 224, 255, 0.1); border: 1px solid var(--accent3); border-radius: 12px; padding: 15px; margin: 15px 0; text-align: left;">
+      <p style="font-size: 14px; line-height: 1.6;">
+        <strong>Paybill Number:</strong> <span style="color: var(--accent3); font-size: 16px;">247247</span><br>
+        <strong>Account Number:</strong> <span style="color: var(--accent3); font-size: 16px;">0830185269135</span><br>
+        <strong>Amount:</strong> KES 299
+      </p>
+    </div>
+
+    <p style="color: var(--accent3); font-weight: bold; margin-bottom: 20px;">This is a one-time payment via M-Pesa</p>
+    <button class="btn" onclick="goToGold()">✓ I Have Paid - Activate Now</button>
+    <button class="btn" style="margin-top: 10px; background: #444;" onclick="document.getElementById('goldModal').style.display='none'">Cancel</button>
+  </div>
+</div>
+
+<!-- Activation Fee Required Modal -->
+<div class="modal" id="activationModal" style="display: none;" onclick="closeModal(event, 'activationModal')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <h3>Activation Fee Required</h3>
+    <p style="margin: 20px 0;">You must pay the Activation Fee (KES 999) and have 2 referrals to withdraw.</p>
+
+    <div style="background: rgba(255, 159, 67, 0.1); border: 1px solid var(--warning); border-radius: 12px; padding: 15px; margin: 15px 0; text-align: left;">
+      <p style="font-size: 14px; line-height: 1.6;">
+        <strong>Paybill Number:</strong> <span style="color: var(--warning); font-size: 16px;">247247</span><br>
+        <strong>Account Number:</strong> <span style="color: var(--warning); font-size: 16px;">0830185269135</span><br>
+        <strong>Amount:</strong> KES 999
+      </p>
+    </div>
+
+    <p style="color: var(--accent2); font-weight: bold; margin-bottom: 20px;">You must pay this fee and get 2 referrals before your first withdrawal</p>
+    <button class="btn btn-secondary" onclick="goToActivation()">✓ I Have Paid - Activate Now</button>
+    <button class="btn" style="margin-top: 10px; background: #444;" onclick="document.getElementById('activationModal').style.display='none'">Cancel</button>
+  </div>
+</div>
+
+<!-- M-Pesa Payment Modal -->
+<div class="modal" id="mpesaModal" style="display: none;" onclick="closeModal(event, 'mpesaModal')">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="mpesa-logo">M-PESA</div>
+    <h3 id="mpesaTitle">M-Pesa Payment</h3>
+    
+    <div class="payment-details">
+      <div class="payment-row">
+        <span>Item:</span>
+        <span id="mpesaItem">Gold Package</span>
+      </div>
+      <div class="payment-row">
+        <span>Amount:</span>
+        <span id="mpesaAmount">KES 999</span>
+      </div>
+      <div class="payment-row total">
+        <span>Total to Pay:</span>
+        <span id="mpesaTotal">KES 299</span>
+      </div>
+    </div>
+
+    <div id="mpesaForm">
+      <p style="margin-bottom: 15px; opacity: 0.8;">Enter your M-Pesa number to receive STK push</p>
+      <input type="text" id="mpesaPhone" placeholder="e.g. 07XXXXXXXX or 2547XXXXXXXX" maxlength="13">
+      <button class="btn" id="mpesaPayBtn" onclick="processMpesaPayment()">Pay Now</button>
+      <button class="btn" style="margin-top: 10px; background: #444;" onclick="closeMpesaModal()">Cancel</button>
+    </div>
+
+    <div id="mpesaProcessing" style="display: none;">
+      <div class="payment-status pending">
+        <div class="spinner"></div>
+        <span>Sending M-Pesa prompt...</span>
+      </div>
+      <p style="margin-top: 15px; opacity: 0.8;">Check your phone and enter M-Pesa PIN</p>
+    </div>
+
+    <div id="mpesaSuccess" style="display: none;">
+      <div class="payment-status">
+        <span style="font-size: 24px;">✓</span>
+        <span>Payment Successful!</span>
+      </div>
+      <button class="btn btn-success" onclick="closeMpesaModal()">Continue to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// --- API CONFIGURATION ---
+const API_URL = 'http://localhost:3000/api'; // Change this to your server URL when deployed
+
+function getBasePageUrl() {
+  return window.location.href.split('?')[0].split('#')[0];
+}
+
+function getReferralCodeFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  return (params.get('ref') || '').trim().toUpperCase();
+}
+
+function applyReferralCodeFromUrl() {
+  const refCode = getReferralCodeFromUrl();
+  const refInput = document.getElementById('regReferral');
+  if (refCode && refInput) {
+    refInput.value = refCode;
+  }
+}
+
+function normalizePhoneNumber(phone) {
+  const digits = String(phone || '').replace(/\D/g, '');
+  if (/^(254|0)?(7|1)\d{8}$/.test(digits)) {
+    if (digits.startsWith('0')) return '254' + digits.slice(1);
+    if (digits.startsWith('254')) return digits;
+    return '254' + digits;
+  }
+  return null;
+}
+
+async function parseResponse(response) {
+  const contentType = response.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    return await response.json();
+  }
+  const text = await response.text();
+  return { error: text || `Request failed with status ${response.status}` };
+}
+
+function handleServerError(error) {
+  console.error(error);
+  notify('Cannot reach server. Check backend/API URL and try again.', 'error');
+}
+
+function togglePasswordVisibility(inputId, isVisible) {
+  const input = document.getElementById(inputId);
+  if (input) input.type = isVisible ? 'text' : 'password';
+}
+
+
+const SUPPORT_PHONE = '+254753747263';
+const PAGE_META = {
+  dashboard: {
+    title: 'Dashboard',
+    subtitle: 'Manage your wallet, service activity, referrals, WhatsApp support, and transaction records in one place.'
+  },
+  views: {
+    title: 'Views Portal',
+    subtitle: 'Submit your daily views and the system calculates your earnings automatically.'
+  },
+  withdraw: {
+    title: 'Withdraw Funds',
+    subtitle: 'Request secure withdrawals after activation and referral requirements are complete.'
+  },
+  referral: {
+    title: 'Referral Hub',
+    subtitle: 'Share your referral link and track how close you are to the withdrawal requirement.'
+  },
+  transactions: {
+    title: 'Transaction History',
+    subtitle: 'See a real backend record of credits, requests, activations, and account changes.'
+  },
+  packages: {
+    title: 'Packages',
+    subtitle: 'Activate your account features and unlock more service tools.'
+  },
+  support: {
+    title: 'Support Center',
+    subtitle: 'Contact our team on WhatsApp and get account help fast.'
+  },
+  settings: {
+    title: 'Settings',
+    subtitle: 'Control your theme and account experience.'
+  },
+  about: {
+    title: 'About Wealthy Fax',
+    subtitle: 'Learn more about the platform, what it offers, and how it serves users.'
+  }
+};
+
+function setPageMeta(pageId) {
+  const meta = PAGE_META[pageId] || PAGE_META.dashboard;
+  const title = document.getElementById('pageTitle');
+  const subtitle = document.getElementById('pageSubtitle');
+  if (title) title.innerText = meta.title;
+  if (subtitle) subtitle.innerText = meta.subtitle;
+}
+
+function toggleSidebar(forceClose = false) {
+  if (window.innerWidth > 900) return;
+  if (forceClose) {
+    document.body.classList.remove('sidebar-open');
+    return;
+  }
+  document.body.classList.toggle('sidebar-open');
+}
+
+function openResetPanel() {
+  document.getElementById('resetPanel').style.display = 'block';
+  const resetUser = document.getElementById('resetUser');
+  if (resetUser) resetUser.focus();
+}
+
+function closeResetPanel() {
+  document.getElementById('resetPanel').style.display = 'none';
+  document.getElementById('resetDevCode').innerText = '';
+}
+
+function formatDate(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '-';
+  return date.toLocaleString();
+}
+
+function formatCurrency(amount) {
+  return `KES ${Number(amount || 0).toLocaleString()}`;
+}
+
+function formatTransactionType(type) {
+  return String(type || '')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, char => char.toUpperCase());
+}
+
+function renderTransactions(items = []) {
+  const container = document.getElementById('transactionHistory');
+  if (!container) return;
+
+  if (!items.length) {
+    container.innerHTML = `<div class="transaction-empty">No transactions yet. Your latest credits and requests will appear here.</div>`;
+    return;
+  }
+
+  const rows = items.map(item => {
+    const amountClass = item.amount > 0 ? 'amount-positive' : item.amount < 0 ? 'amount-negative' : 'amount-neutral';
+    const amountLabel = item.amount > 0 ? `+${formatCurrency(item.amount)}` : item.amount < 0 ? `-${formatCurrency(Math.abs(item.amount))}` : 'KES 0';
+    return `
+      <tr>
+        <td>${formatDate(item.createdAt)}</td>
+        <td>${formatTransactionType(item.type)}</td>
+        <td>${item.description || '-'}</td>
+        <td class="${amountClass}">${amountLabel}</td>
+        <td><span class="status-chip ${item.status || 'success'}">${String(item.status || 'success').toUpperCase()}</span></td>
+      </tr>
+    `;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+
+async function loadTransactions() {
+  const user = localStorage.getItem('currentUser');
+  if (!user) return;
+
+  try {
+    const response = await fetch(`${API_URL}/transactions/${encodeURIComponent(user)}?limit=25`);
+    const data = await parseResponse(response);
+    if (response.ok) {
+      renderTransactions(data.transactions || []);
+    } else {
+      notify(data.error || 'Could not load transactions', 'error');
+    }
+  } catch (error) {
+    console.error('Failed to load transactions:', error);
+  }
+}
+
+async function loadViewProofStatus() {
+  const user = localStorage.getItem('currentUser');
+  const statusEl = document.getElementById('viewProofStatus');
+  if (!user || !statusEl) return;
+
+  try {
+    const response = await fetch(`${API_URL}/view-submissions/${encodeURIComponent(user)}?limit=1`);
+    const data = await parseResponse(response);
+
+    if (!response.ok || !data.submissions || !data.submissions.length) {
+      statusEl.innerText = 'No screenshot submitted yet.';
+      return;
+    }
+
+    const latest = data.submissions[0];
+    const label = String(latest.status || 'pending').replace(/_/g, ' ');
+    statusEl.innerText = `Latest proof: ${latest.views} views • ${label} • ${formatDate(latest.createdAt)}` + (latest.reviewNotes ? ` • ${latest.reviewNotes}` : '');
+  } catch (error) {
+    console.error('Failed to load proof status:', error);
+  }
+}
+
+
+function setButtonLoading(buttonId, isLoading, loadingText) {
+  const button = document.getElementById(buttonId);
+  if (!button) return;
+
+  if (!button.dataset.originalHtml) {
+    button.dataset.originalHtml = button.innerHTML;
+  }
+
+  if (isLoading) {
+    button.disabled = true;
+    button.innerHTML = `<span class="btn-loader"><span class="spinner sm"></span><span>${loadingText}</span></span>`;
+  } else {
+    button.disabled = false;
+    button.innerHTML = button.dataset.originalHtml;
+  }
+}
+
+async function requestPasswordReset() {
+  const username = document.getElementById('resetUser').value.trim();
+  if (!username) {
+    notify('Enter your username first', 'error');
+    return;
+  }
+
+  setButtonLoading('resetRequestBtn', true, 'Generating...');
+  try {
+    const response = await fetch(`${API_URL}/request-password-reset`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username })
+    });
+
+    const data = await parseResponse(response);
+    if (response.ok) {
+      document.getElementById('resetDevCode').innerText = data.devResetCode
+        ? `Local test reset code: ${data.devResetCode}`
+        : `Reset code generated successfully.`;
+      notify('Reset code generated successfully', 'success');
+    } else {
+      notify(data.error || 'Could not generate reset code', 'error');
+    }
+  } catch (error) {
+    handleServerError(error);
+  } finally {
+    setButtonLoading('resetRequestBtn', false);
+  }
+}
+
+async function resetPassword() {
+  const username = document.getElementById('resetUser').value.trim();
+  const resetCode = document.getElementById('resetCode').value.trim();
+  const newPassword = document.getElementById('newResetPassword').value;
+
+  if (!username || !resetCode || !newPassword) {
+    notify('Fill in username, reset code, and new password', 'error');
+    return;
+  }
+
+  if (newPassword.length !== 4) {
+    notify('New password must be exactly 4 characters', 'error');
+    return;
+  }
+
+  setButtonLoading('resetSaveBtn', true, 'Saving...');
+  try {
+    const response = await fetch(`${API_URL}/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, resetCode, newPassword })
+    });
+
+    const data = await parseResponse(response);
+    if (response.ok) {
+      notify('Password reset successful. You can log in now.', 'success');
+      document.getElementById('resetCode').value = '';
+      document.getElementById('newResetPassword').value = '';
+      document.getElementById('resetDevCode').innerText = '';
+      toggleAuth(true);
+      closeResetPanel();
+    } else {
+      notify(data.error || 'Password reset failed', 'error');
+    }
+  } catch (error) {
+    handleServerError(error);
+  } finally {
+    setButtonLoading('resetSaveBtn', false);
+  }
+}
+
+// --- TOAST NOTIFICATION SYSTEM ---
+function notify(message, type = 'success') {
+  const container = document.getElementById('toastContainer');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.innerText = message;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('hide');
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
+}
+
+// --- AUTHENTICATION LOGIC ---
+async function toggleAuth(showLogin) {
+    if (showLogin) {
+        document.getElementById('loginForm').style.display = 'block';
+        document.getElementById('registerForm').style.display = 'none';
+    } else {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'block';
+    }
+}
+
+async function register() {
+  const user = document.getElementById("regUser").value;
+  const pass = document.getElementById("regPass").value;
+  const referralCode = document.getElementById("regReferral").value.trim();
+
+  if (!user || !pass) { 
+    notify("Please fill all fields", "error"); 
+    return; 
+  }
+
+  if (pass.length !== 4) {
+    notify("Password must be exactly 4 characters", "error");
+    return;
+  }
+
+  setButtonLoading('registerBtn', true, 'Creating account...');
+  try {
+    const response = await fetch(`${API_URL}/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: user, password: pass, referralCode })
+    });
+
+    const data = await parseResponse(response);
+
+    if (response.ok) {
+      notify("Registration successful! Please Login.", "success");
+      document.getElementById("regUser").value = "";
+      document.getElementById("regPass").value = "";
+      document.getElementById("regReferral").value = getReferralCodeFromUrl();
+      toggleAuth(true);
+    } else {
+      notify(data.error || "Registration failed", "error");
+    }
+  } catch (error) {
+    handleServerError(error);
+  } finally {
+    setButtonLoading('registerBtn', false);
+  }
+}
+
+async function login() {
+  const user = document.getElementById("loginUser").value;
+  const pass = document.getElementById("loginPass").value;
+  const remember = document.getElementById("rememberMe").checked;
+
+  if (!user || !pass) {
+    notify("Please fill all fields", "error");
+    return;
+  }
+
+  if (pass.length !== 4) {
+    notify("Password must be exactly 4 characters", "error");
+    return;
+  }
+
+  setButtonLoading('loginBtn', true, 'Logging in...');
+  try {
+    const response = await fetch(`${API_URL}/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: user, password: pass })
+    });
+
+    const data = await parseResponse(response);
+
+    if (response.ok) {
+      localStorage.setItem("loggedIn", "yes");
+      localStorage.setItem("currentUser", user);
+      localStorage.setItem("remember", remember ? "yes" : "no");
+      notify("Welcome back, " + user + "!", "success");
+      showApp();
+    } else {
+      notify(data.error || "Invalid credentials", "error");
+    }
+  } catch (error) {
+    handleServerError(error);
+  } finally {
+    setButtonLoading('loginBtn', false);
+  }
+}
+
+function logout() {
+  localStorage.setItem("loggedIn", "no");
+  if (localStorage.getItem("remember") !== "yes") { 
+    localStorage.removeItem("currentUser"); 
+  }
+  location.reload();
+}
+
+// --- APP INITIALIZATION & NAVIGATION ---
+async function showApp() {
+  document.getElementById("authScreen").style.display = "none";
+  document.getElementById("app").style.display = "flex";
+  document.getElementById("depositBtn").style.display = "block";
+  document.getElementById("waSupport").style.display = "flex";
+  setPageMeta('dashboard');
+  await loadUserData();
+  await loadTransactions();
+  await loadViewProofStatus();
+  startCooldownCheck();
+  updatePackageStatus();
+}
+
+async function loadUserData() {
+  const user = localStorage.getItem("currentUser");
+  if (!user) return;
+
+  try {
+    const response = await fetch(`${API_URL}/user/${user}`);
+    const data = await parseResponse(response);
+
+    if (response.ok) {
+      document.getElementById("balance").innerText = "KES " + data.balance.toLocaleString();
+      document.getElementById("viewsCount").innerText = data.views;
+      const referralCount = Number(data.referralCount || 0);
+      const referralCode = (data.referralCode || user).toUpperCase();
+      const referralsRequired = 2;
+      const progress = Math.min((referralCount / referralsRequired) * 100, 100);
+      document.getElementById("refCount").innerText = `${referralCount} / ${referralsRequired}`;
+      document.getElementById("referralProgressText").innerText = `Referrals: ${referralCount} / ${referralsRequired}`;
+      document.getElementById("refProgressBar").style.width = `${progress}%`;
+
+      let statusText = "Not Active";
+      if (data.gold === "yes" && data.activation === "yes") {
+        statusText = "Gold + Active";
+      } else if (data.gold === "yes") {
+        statusText = "Gold Active";
+      } else if (data.activation === "yes") {
+        statusText = "Activation Paid";
+      }
+
+      const referralsLeft = Math.max(referralsRequired - referralCount, 0);
+      let refStatusText = `Need ${referralsRequired} referrals to unlock withdrawals`;
+      if (referralCount >= referralsRequired) {
+        refStatusText = "Referral target completed";
+      } else if (referralCount === 1) {
+        refStatusText = "1 more referral needed to unlock withdrawals";
+      }
+
+      let withdrawReadyText = "Withdrawal locked";
+      if (data.activation === "yes" && referralCount >= referralsRequired) {
+        withdrawReadyText = "Withdrawal unlocked";
+      } else if (data.activation === "yes") {
+        withdrawReadyText = `Activation paid • ${referralsLeft} referral${referralsLeft === 1 ? '' : 's'} left`;
+      } else if (referralCount >= referralsRequired) {
+        withdrawReadyText = "Referrals complete • Pay KES 999 to unlock";
+      } else {
+        withdrawReadyText = `Need KES 999 activation + ${referralsLeft} referral${referralsLeft === 1 ? '' : 's'}`;
+      }
+
+      document.getElementById("pkg").innerText = statusText;
+      document.getElementById("refStatusText").innerText = refStatusText;
+      document.getElementById("withdrawReadyText").innerText = withdrawReadyText;
+      document.getElementById("refLink").value = `${getBasePageUrl()}?ref=${referralCode}`;
+      const userPill = document.getElementById("userPill");
+      if (userPill) userPill.innerText = `User: ${data.username}`;
+    }
+  } catch (error) {
+    console.error("Failed to load user data:", error);
+  }
+}
+
+async function updatePackageStatus() {
+  const user = localStorage.getItem("currentUser");
+  if (!user) return;
+
+  try {
+    const response = await fetch(`${API_URL}/user/${user}`);
+    const data = await parseResponse(response);
+
+    if (response.ok) {
+      const goldBtn = document.getElementById("goldPayBtn");
+      const goldStatus = document.getElementById("goldStatus");
+
+      if (data.gold === "yes") {
+        goldBtn.style.display = "none";
+        goldStatus.style.display = "block";
+      } else {
+        goldBtn.style.display = "block";
+        goldStatus.style.display = "none";
+      }
+
+      const activationBtn = document.getElementById("activationPayBtn");
+      const activationStatus = document.getElementById("activationStatus");
+
+      if (data.activation === "yes") {
+        activationBtn.style.display = "none";
+        activationStatus.style.display = "block";
+      } else {
+        activationBtn.style.display = "block";
+        activationStatus.style.display = "none";
+      }
+    }
+  } catch (error) {
+    console.error("Failed to update package status:", error);
+  }
+}
+
+async function showPage(id, element) {
+  const user = localStorage.getItem("currentUser");
+
+  if (id === "views") {
+    try {
+      const response = await fetch(`${API_URL}/user/${user}`);
+      const data = await parseResponse(response);
+
+      if (!data || data.gold !== "yes") {
+        document.getElementById("goldModal").style.display = "flex";
+        return;
+      }
+    } catch (error) {
+      notify("Error checking access", "error");
+      return;
+    }
+  }
+
+  document.getElementById("goldModal").style.display = "none";
+  document.getElementById("activationModal").style.display = "none";
+  setPageMeta(id);
+
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(p => p.style.display = "none");
+  const targetPage = document.getElementById(id);
+  if (!targetPage) {
+    notify('Selected page was not found', 'error');
+    return;
+  }
+  targetPage.style.display = "block";
+
+  if (element) {
+    const links = document.querySelectorAll('.nav a');
+    links.forEach(l => l.classList.remove("active"));
+    element.classList.add("active");
+  }
+
+  if (id === "transactions") {
+    loadTransactions();
+  }
+  if (id === "views") {
+    loadViewProofStatus();
+  }
+
+  toggleSidebar(true);
+}
+
+function closeModal(event, modalId) {
+  if (event.target.id === modalId) {
+    document.getElementById(modalId).style.display = 'none';
+  }
+}
+
+function goToDeposit() {
+  const packagesLink = document.querySelector('.nav a[onclick*="packages"]');
+  showPage('packages', packagesLink);
+  notify("Purchase Gold Package (KES 299) via M-Pesa to start earning at KES 50 per view", "success");
+}
+
+async function goToGold() {
+  document.getElementById("goldModal").style.display = "none";
+  const packagesLink = document.querySelector('.nav a[onclick*="packages"]');
+  showPage('packages', packagesLink);
+  setTimeout(() => confirmManualPayment('gold'), 100);
+}
+
+async function goToActivation() {
+  document.getElementById("activationModal").style.display = "none";
+  const packagesLink = document.querySelector('.nav a[onclick*="packages"]');
+  showPage('packages', packagesLink);
+  setTimeout(() => confirmManualPayment('activation'), 100);
+}
+
+function closeMpesaModal() {
+  document.getElementById('mpesaModal').style.display = 'none';
+  document.getElementById('mpesaForm').style.display = 'block';
+  document.getElementById('mpesaProcessing').style.display = 'none';
+  document.getElementById('mpesaSuccess').style.display = 'none';
+  document.getElementById('mpesaPhone').value = '';
+}
+
+async function processMpesaPayment() {
+  const phone = normalizePhoneNumber(document.getElementById('mpesaPhone').value);
+  if (!phone) {
+    notify('Please enter a valid M-Pesa number', 'error');
+    return;
+  }
+
+  document.getElementById('mpesaForm').style.display = 'none';
+  document.getElementById('mpesaProcessing').style.display = 'block';
+
+  try {
+    // Placeholder until backend STK push endpoint is connected.
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    document.getElementById('mpesaProcessing').style.display = 'none';
+    document.getElementById('mpesaSuccess').style.display = 'block';
+    notify('M-Pesa prompt simulated successfully.', 'success');
+  } catch (error) {
+    document.getElementById('mpesaProcessing').style.display = 'none';
+    document.getElementById('mpesaForm').style.display = 'block';
+    handleServerError(error);
+  }
+}
+
+// --- MANUAL M-PESA PAYMENT SYSTEM ---
+const PAYBILL_NUMBER = '247247';
+const ACCOUNT_NUMBER = '0830185269135';
+
+async function confirmManualPayment(type) {
+  const user = localStorage.getItem("currentUser");
+  if (!user) {
+    notify("Please login first", "error");
+    return;
+  }
+
+  if (type === 'gold') {
+    if (confirm('Have you paid KES 299 to Paybill 247247, Account 0830185269135?\n\nClick OK to activate your Gold Package.')) {
+      try {
+        const response = await fetch(`${API_URL}/activate-gold`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user })
+        });
+
+        const data = await parseResponse(response);
+
+        if (response.ok) {
+          await loadUserData();
+          await loadTransactions();
+          await updatePackageStatus();
+          if (data.creditedAmount) {
+            notify(`✓ Gold Package activated! KES ${data.creditedAmount.toLocaleString()} has been added to your balance.`, "success");
+          } else if (data.alreadyActive) {
+            notify("✓ Gold Package is already active on this account.", "success");
+          } else {
+            notify("✓ Gold Package activated! You can now access Views Portal.", "success");
+          }
+        } else {
+          notify(data.error || "Activation failed", "error");
+        }
+      } catch (error) {
+        handleServerError(error);
+      }
+    }
+  } else if (type === 'activation') {
+    if (confirm('Have you paid KES 999 to Paybill 247247, Account 0830185269135?\n\nClick OK to unlock withdrawals.')) {
+      try {
+        const response = await fetch(`${API_URL}/activate-withdrawal`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user })
+        });
+
+        const data = await parseResponse(response);
+
+        if (response.ok) {
+          await loadUserData();
+          await loadTransactions();
+          await updatePackageStatus();
+          notify("✓ Activation Fee paid! Get 2 referrals to unlock withdrawals.", "success");
+        } else {
+          notify(data.error || "Activation failed", "error");
+        }
+      } catch (error) {
+        handleServerError(error);
+      }
+    }
+  }
+}
+
+// --- CORE FUNCTIONALITY ---
+let timerInterval;
+function startCooldownCheck() {
+    if (timerInterval) clearInterval(timerInterval);
+    timerInterval = setInterval(updateCooldown, 1000);
+}
+
+async function updateCooldown() {
+    const user = localStorage.getItem("currentUser");
+    if (!user) return;
+
+    try {
+      const response = await fetch(`${API_URL}/user/${user}`);
+      const data = await parseResponse(response);
+
+      const btn = document.getElementById("viewSubmitBtn");
+      const timerText = document.getElementById("cooldownTimer");
+
+      if (!data || !data.lastSubmission) return;
+
+      const now = Date.now();
+      const timeLeft = (data.lastSubmission + 86400000) - now;
+
+      if (timeLeft > 0) {
+        btn.disabled = true;
+        const h = Math.floor(timeLeft / 3600000);
+        const m = Math.floor((timeLeft % 3600000) / 60000);
+        const s = Math.floor((timeLeft % 60000) / 1000);
+        timerText.innerText = `Next submission in: ${h}h ${m}m ${s}s`;
+      } else { 
+        btn.disabled = false; 
+        timerText.innerText = ""; 
+      }
+    } catch (error) {
+      console.error("Cooldown check failed:", error);
+    }
+}
+
+async function submitViews() {
+  const viewsInput = document.getElementById("viewNumber");
+  const screenshotInput = document.getElementById("viewScreenshot");
+  const views = Number(viewsInput.value);
+  const screenshot = screenshotInput.files && screenshotInput.files[0];
+
+  if (!views || views <= 0) {
+    notify("Please enter a valid number of views", "error");
+    return;
+  }
+
+  if (!screenshot) {
+    notify("Please upload a screenshot proof", "error");
+    return;
+  }
+
+  const user = localStorage.getItem("currentUser");
+  const formData = new FormData();
+  formData.append('username', user);
+  formData.append('views', String(views));
+  formData.append('screenshot', screenshot);
+
+  try {
+    setButtonLoading('viewSubmitBtn', true, 'Verifying screenshot...');
+    const response = await fetch(`${API_URL}/submit-views`, {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await parseResponse(response);
+
+    if (response.ok) {
+      if (typeof data.balance === 'number') {
+        document.getElementById("balance").innerText = "KES " + data.balance.toLocaleString();
+      }
+      const credited = typeof data.earnings === 'number' ? ` KES ${data.earnings.toLocaleString()} credited.` : '';
+      notify((data.message || "Screenshot verified successfully.") + credited, "success");
+      viewsInput.value = "";
+      screenshotInput.value = "";
+      await loadUserData();
+      await loadViewProofStatus();
+      await loadTransactions();
+      updateCooldown();
+    } else {
+      const details = data.verificationNotes ? ` ${data.verificationNotes}` : '';
+      notify((data.error || "Screenshot verification failed") + details, "error");
+      await loadViewProofStatus();
+    }
+  } catch (error) {
+    handleServerError(error);
+  } finally {
+    setButtonLoading('viewSubmitBtn', false);
+  }
+}
+
+async function withdraw() {
+  const amount = Number(document.getElementById("withdrawAmount").value);
+  const mpesa = normalizePhoneNumber(document.getElementById("mpesaNumber").value);
+  const user = localStorage.getItem("currentUser");
+
+  if (!amount || amount < 8000) {
+    notify("Minimum withdrawal is KES 8000", "error");
+    return;
+  }
+
+  if (!mpesa) {
+    notify("Please enter a valid M-Pesa number", "error");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/withdraw`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username: user, amount: amount, phone: mpesa })
+    });
+
+    const data = await parseResponse(response);
+
+    if (response.ok) {
+      document.getElementById("balance").innerText = "KES " + data.balance.toLocaleString();
+      notify("Processing withdrawal of KES " + amount.toLocaleString() + "...", "success");
+      document.getElementById("withdrawBar").style.width = "100%";
+      setTimeout(() => { 
+        document.getElementById("withdrawBar").style.width = "0%"; 
+        notify("Withdrawal request submitted successfully!", "success");
+        document.getElementById("withdrawAmount").value = "";
+        document.getElementById("mpesaNumber").value = "";
+        loadTransactions();
+      }, 3500);
+    } else if (data.needsActivation) {
+      document.getElementById("activationModal").style.display = "flex";
+    } else if (data.needsReferrals) {
+      notify(`You need at least 2 referrals before withdrawing. Current referrals: ${data.referralCount || 0}`, "error");
+    } else {
+      notify(data.error || "Withdrawal failed", "error");
+    }
+  } catch (error) {
+    handleServerError(error);
+  }
+}
+
+async function copyReferral() {
+  const linkInput = document.getElementById("refLink");
+  const value = linkInput.value.trim();
+
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(value);
+    } else {
+      linkInput.select();
+      document.execCommand('copy');
+    }
+    notify("Referral link copied!", "success");
+  } catch (error) {
+    notify("Could not copy referral link", "error");
+  }
+}
+
+function toggleTheme() {
+  document.body.classList.toggle("light");
+  localStorage.setItem("theme", document.body.classList.contains("light") ? "light" : "dark");
+}
+
+function loadTheme() { 
+  if (localStorage.getItem("theme") === "light") 
+    document.body.classList.add("light"); 
+}
+
+// Initialize
+window.addEventListener("resize", () => { if (window.innerWidth > 900) document.body.classList.remove("sidebar-open"); });
+loadTheme();
+applyReferralCodeFromUrl();
+
+if (localStorage.getItem("loggedIn") === "yes" || 
+    (localStorage.getItem("remember") === "yes" && localStorage.getItem("currentUser"))) {
+  showApp();
+} else {
+  document.getElementById("authScreen").style.display = "block";
+}
+</script>
+</body>
+</html>
