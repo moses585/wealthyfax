@@ -15,7 +15,7 @@ const PORT = Number(process.env.PORT) || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/wealthyfax';
 const CORS_ORIGIN = process.env.CORS_ORIGIN || '*';
 const VIEW_RATE = 50;
-const WITHDRAWAL_MINIMUM = 8000;
+const WITHDRAWAL_MINIMUM = 4000;
 const WITHDRAWAL_REFERRALS_REQUIRED = 2;
 const SUBMISSION_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 const PASSWORD_RESET_EXPIRY_MS = 15 * 60 * 1000;
@@ -612,7 +612,7 @@ app.post('/api/activate-gold', async (req, res) => {
     let creditedAmount = 0;
 
     if (!user.goldCreditApplied) {
-      creditedAmount = 299;
+      creditedAmount = 99;
       user.balance += creditedAmount;
       user.goldCreditApplied = true;
       await createTransaction({
@@ -620,7 +620,7 @@ app.post('/api/activate-gold', async (req, res) => {
         type: 'gold_activation_credit',
         amount: creditedAmount,
         description: 'Gold package activated and starter wallet credited',
-        meta: { packagePrice: 299 }
+        meta: { packagePrice: 99 }
       });
     }
 
@@ -675,7 +675,7 @@ app.post('/api/activate-withdrawal', async (req, res) => {
       type: 'withdrawal_activation',
       amount: 0,
       description: 'Withdrawal feature activated',
-      meta: { fee: 999 }
+      meta: { fee: 599 }
     });
 
     return res.json({
