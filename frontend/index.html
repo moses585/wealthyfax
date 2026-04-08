@@ -826,12 +826,12 @@ body.light input::placeholder { color: rgba(11,16,32,0.55); }
     <section class="page" id="withdraw" style="display: none;">
       <div class="card">
         <h2>Withdraw Funds</h2>
-        <p style="margin-bottom: 12px; opacity: 0.8;">Minimum withdrawal: <b>KES 8000</b></p>
+        <p style="margin-bottom: 12px; opacity: 0.8;">Minimum withdrawal: <b>KES 4000</b></p>
         <p style="margin-bottom: 20px; opacity: 0.8;">Requirement: <b>Activation fee paid + at least 2 referrals</b></p>
         
         <div class="withdraw-modern">
             <div class="row">
-              <input type="number" id="withdrawAmount" placeholder="Enter amount (KES)" min="8000">
+              <input type="number" id="withdrawAmount" placeholder="Enter amount (KES)" min="4000">
             </div>
             <div class="row">
               <input type="text" id="mpesaNumber" placeholder="Enter Mpesa number (e.g. 07XXXXXXXX)">
@@ -864,7 +864,7 @@ body.light input::placeholder { color: rgba(11,16,32,0.55); }
       <div class="card package-card featured">
         <div class="package-badge">REQUIRED</div>
         <h3>Gold Package</h3>
-        <p class="big">KES 299</p>
+        <p class="big">KES 99</p>
         <p style="opacity: 0.8; margin-bottom: 10px;">Pay this FIRST to start earning</p>
         <ul class="package-features">
           <li>Access to Views Portal</li>
@@ -879,24 +879,24 @@ body.light input::placeholder { color: rgba(11,16,32,0.55); }
           <p style="font-size: 14px; line-height: 1.6; margin-bottom: 10px;">
             <strong>Paybill Number:</strong> <span style="color: var(--accent3); font-size: 18px;">247247</span><br>
             <strong>Account Number:</strong> <span style="color: var(--accent3); font-size: 18px;">0830185269135</span><br>
-            <strong>Amount:</strong> KES 299
+            <strong>Amount:</strong> KES 99
           </p>
           <p style="font-size: 12px; opacity: 0.8;">After payment, click the button below to activate your account.</p>
         </div>
 
-        <button class="btn" id="goldPayBtn" onclick="confirmManualPayment('gold')">✓ I Have Paid KES 299</button>
+        <button class="btn" id="goldPayBtn" onclick="confirmManualPayment('gold')">✓ I Have Paid KES 99</button>
         <p id="goldStatus" style="margin-top: 15px; color: var(--success); font-weight: bold; display: none;">✓ Gold Package Active</p>
       </div>
       
       <!-- Activation Fee -->
       <div class="card package-card">
         <h3>Activation Fee</h3>
-        <p class="big">KES 999</p>
+        <p class="big">KES 599</p>
         <p style="opacity: 0.8; margin-bottom: 10px;">Pay this when ready to withdraw</p>
         <ul class="package-features">
           <li class="locked-feature">Unlock Withdrawal Feature</li>
           <li class="locked-feature">Instant M-Pesa withdrawals</li>
-          <li class="locked-feature">Minimum withdrawal: KES 8000</li>
+          <li class="locked-feature">Minimum withdrawal: KES 4000</li>
           <li class="locked-feature">Secure transactions</li>
           <li class="locked-feature">At least 2 referrals required</li>
         </ul>
@@ -907,12 +907,12 @@ body.light input::placeholder { color: rgba(11,16,32,0.55); }
           <p style="font-size: 14px; line-height: 1.6; margin-bottom: 10px;">
             <strong>Paybill Number:</strong> <span style="color: var(--warning); font-size: 18px;">247247</span><br>
             <strong>Account Number:</strong> <span style="color: var(--warning); font-size: 18px;">0830185269135</span><br>
-            <strong>Amount:</strong> KES 999
+            <strong>Amount:</strong> KES 599
           </p>
           <p style="font-size: 12px; opacity: 0.8;">After payment, click the button below to activate withdrawals. You will still need 2 referrals before your first withdrawal.</p>
         </div>
 
-        <button class="btn btn-secondary" id="activationPayBtn" onclick="confirmManualPayment('activation')">✓ I Have Paid KES 999</button>
+        <button class="btn btn-secondary" id="activationPayBtn" onclick="confirmManualPayment('activation')">✓ I Have Paid KES 599</button>
         <p id="activationStatus" style="margin-top: 15px; color: var(--success); font-weight: bold; display: none;">✓ Activation Fee Paid</p>
       </div>
     </section>
@@ -1036,13 +1036,13 @@ body.light input::placeholder { color: rgba(11,16,32,0.55); }
 <div class="modal" id="goldModal" style="display: none;" onclick="closeModal(event, 'goldModal')">
   <div class="modal-content" onclick="event.stopPropagation()">
     <h3>Gold Package Required</h3>
-    <p style="margin: 20px 0;">You must purchase the Gold Package (KES 299) to access the Views Portal and start earning.</p>
+    <p style="margin: 20px 0;">You must purchase the Gold Package (KES 99) to access the Views Portal and start earning.</p>
 
     <div style="background: rgba(0, 224, 255, 0.1); border: 1px solid var(--accent3); border-radius: 12px; padding: 15px; margin: 15px 0; text-align: left;">
       <p style="font-size: 14px; line-height: 1.6;">
         <strong>Paybill Number:</strong> <span style="color: var(--accent3); font-size: 16px;">247247</span><br>
         <strong>Account Number:</strong> <span style="color: var(--accent3); font-size: 16px;">0830185269135</span><br>
-        <strong>Amount:</strong> KES 299
+        <strong>Amount:</strong> KES 99
       </p>
     </div>
 
@@ -1056,13 +1056,13 @@ body.light input::placeholder { color: rgba(11,16,32,0.55); }
 <div class="modal" id="activationModal" style="display: none;" onclick="closeModal(event, 'activationModal')">
   <div class="modal-content" onclick="event.stopPropagation()">
     <h3>Activation Fee Required</h3>
-    <p style="margin: 20px 0;">You must pay the Activation Fee (KES 999) and have 2 referrals to withdraw.</p>
+    <p style="margin: 20px 0;">You must pay the Activation Fee (KES 599) and have 2 referrals to withdraw.</p>
 
     <div style="background: rgba(255, 159, 67, 0.1); border: 1px solid var(--warning); border-radius: 12px; padding: 15px; margin: 15px 0; text-align: left;">
       <p style="font-size: 14px; line-height: 1.6;">
         <strong>Paybill Number:</strong> <span style="color: var(--warning); font-size: 16px;">247247</span><br>
         <strong>Account Number:</strong> <span style="color: var(--warning); font-size: 16px;">0830185269135</span><br>
-        <strong>Amount:</strong> KES 999
+        <strong>Amount:</strong> KES 599
       </p>
     </div>
 
@@ -1085,11 +1085,11 @@ body.light input::placeholder { color: rgba(11,16,32,0.55); }
       </div>
       <div class="payment-row">
         <span>Amount:</span>
-        <span id="mpesaAmount">KES 999</span>
+        <span id="mpesaAmount">KES 599</span>
       </div>
       <div class="payment-row total">
         <span>Total to Pay:</span>
-        <span id="mpesaTotal">KES 299</span>
+        <span id="mpesaTotal">KES 99</span>
       </div>
     </div>
 
@@ -1120,7 +1120,7 @@ body.light input::placeholder { color: rgba(11,16,32,0.55); }
 
 <script>
 // --- API CONFIGURATION ---
-const API_URL = "https://wealthyfax-production.up.railway.app/api" ; // Change this to your server URL when deployed
+const API_URL = 'https://wealthyfax-production.up.railway.app/api'; // Live Railway backend
 
 function getBasePageUrl() {
   return window.location.href.split('?')[0].split('#')[0];
@@ -1594,9 +1594,9 @@ async function loadUserData() {
       } else if (data.activation === "yes") {
         withdrawReadyText = `Activation paid • ${referralsLeft} referral${referralsLeft === 1 ? '' : 's'} left`;
       } else if (referralCount >= referralsRequired) {
-        withdrawReadyText = "Referrals complete • Pay KES 999 to unlock";
+        withdrawReadyText = "Referrals complete • Pay KES 599 to unlock";
       } else {
-        withdrawReadyText = `Need KES 999 activation + ${referralsLeft} referral${referralsLeft === 1 ? '' : 's'}`;
+        withdrawReadyText = `Need KES 599 activation + ${referralsLeft} referral${referralsLeft === 1 ? '' : 's'}`;
       }
 
       document.getElementById("pkg").innerText = statusText;
@@ -1703,7 +1703,7 @@ function closeModal(event, modalId) {
 function goToDeposit() {
   const packagesLink = document.querySelector('.nav a[onclick*="packages"]');
   showPage('packages', packagesLink);
-  notify("Purchase Gold Package (KES 299) via M-Pesa to start earning at KES 50 per view", "success");
+  notify("Purchase Gold Package (KES 99) via M-Pesa to start earning at KES 50 per view", "success");
 }
 
 async function goToGold() {
@@ -1763,7 +1763,7 @@ async function confirmManualPayment(type) {
   }
 
   if (type === 'gold') {
-    if (confirm('Have you paid KES 299 to Paybill 247247, Account 0830185269135?\n\nClick OK to activate your Gold Package.')) {
+    if (confirm('Have you paid KES 99 to Paybill 247247, Account 0830185269135?\n\nClick OK to activate your Gold Package.')) {
       try {
         const response = await fetch(`${API_URL}/activate-gold`, {
           method: 'POST',
@@ -1792,7 +1792,7 @@ async function confirmManualPayment(type) {
       }
     }
   } else if (type === 'activation') {
-    if (confirm('Have you paid KES 999 to Paybill 247247, Account 0830185269135?\n\nClick OK to unlock withdrawals.')) {
+    if (confirm('Have you paid KES 599 to Paybill 247247, Account 0830185269135?\n\nClick OK to unlock withdrawals.')) {
       try {
         const response = await fetch(`${API_URL}/activate-withdrawal`, {
           method: 'POST',
@@ -1915,8 +1915,8 @@ async function withdraw() {
   const mpesa = normalizePhoneNumber(document.getElementById("mpesaNumber").value);
   const user = localStorage.getItem("currentUser");
 
-  if (!amount || amount < 8000) {
-    notify("Minimum withdrawal is KES 8000", "error");
+  if (!amount || amount < 4000) {
+    notify("Minimum withdrawal is KES 4000", "error");
     return;
   }
 
